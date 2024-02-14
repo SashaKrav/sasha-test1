@@ -1,0 +1,35 @@
+- hosts: all
+  tasks:
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+
+  - name: Install Apache 
+    yum:
+      name: httpd
+      state: latest
+
+  - name: Start and enable apache
+    systemd:
+      name: httpd
+      state: started
+      enabled: yes
+
+  - name: Download Template
+    get_url:
+      url: https://www.free-css.com/assets/files/free-css-templates/download/page296/carvilla.zip
+      dest: /tmp/carvilla.zip
+
+  - name: Install UNZIP 
+    yum:
+      name: unzip
+      state: latest  
+
+  - name: Extract Template
+    unarchive:
+      src: /tmp/carvilla.zip
+      dest: /tmp/
+      remote_src: yes
+
+  - name: Move Template
+    shell: "mv /tmp/carvilla-v1.0/* /var/www/html/"    
